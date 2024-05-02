@@ -27,7 +27,7 @@ def better_solution(array):
     for i in range(0, len(array)):
         aux.append(array[i] - i)
     # A dictionary is going to store the frequencies of aux.
-    # So if aux = [8, 8, 3, 3 9, 0] the dictionary should be:
+    # So if aux = [8, 8, 3, 3, 9, 0] the dictionary should be:
     # frequencies = {8:2, 3:2, 9:1, 0:1}
     frequencies = {}
     for i in range(0, len(aux)):
