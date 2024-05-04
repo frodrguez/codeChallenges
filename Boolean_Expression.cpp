@@ -74,7 +74,7 @@ bool needsFix(vector<char> v) {
 // This follows basically two rules:
 // 1) if char i has precedence over or equal char i+1 it is safe to say it is char i time's to get into the newPostfix
 //    (but watchout for parenthesis, as they signalizes grouped content to be investigated further)
-//    e.g. [2,4]   [*,+] --> if our vectors are like this for now, it definitely means to multiply 2 and 4.
+//    e.g. [2,4]   [*,+] --> if our vectors look like this for now, it definitely means to multiply 2 and 4.
 // 2) if found any open and closing parenthesis together, we can safely dispose them.
 duo_vector updateLists(duo_vector newLists) {
     bool lastOpChar = false;
@@ -106,8 +106,8 @@ duo_vector updateLists(duo_vector newLists) {
 // to the previous variables found.
 // e.g. Infix notation:   a & b & c ; 4 + 5 * 7
 //      Postfix notation: a b & c & ; 4 5 7 * +
-//          It will first operate "&" with a and b and the result will "&" weith c: = (a & b) & c
-//          It will first operate "*" with 5 and 7 and the result will "+" weith 4: = (5 * 7) + 4
+//          It will first operate "&" with a and b and the result will "&" with c: = (a & b) & c
+//          It will first operate "*" with 5 and 7 and the result will "+" with 4: = (5 * 7) + 4
 vector<char> infixToPostfix(string infix) { 
     duo_vector newLists;
     vector<char> infixList(infix.begin(), infix.end());
