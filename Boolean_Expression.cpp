@@ -16,6 +16,7 @@ using namespace std;
 // The first task is going to be to change from the inputed Infix to Postfix notation.
 // The infixToPostfix method will generate the final postfix char vector as it runs through the infix
 // string inputed and separates variables from operators.
+// The main method of this section is the last one, infixToPostfix. Start there if the idea is not clear and see the examples in the comments above functions.
 
 // New datatype for treating both Operations and Postfix vectors.
 struct duo_vector {
@@ -48,7 +49,8 @@ bool isVariable(char c) {
     }
     return true;
 }
-// Method to check whether or not the Operations vector still needs to be reduced. 
+// Method to check whether or not the Operations vector still needs to be reduced.
+// This method will give the loop condition for the updateLists.
 bool needsFix(vector<char> v) {
     bool lastOpChar = false;
     for(int idx = 0; idx < v.size(); idx++) {
@@ -68,6 +70,12 @@ bool needsFix(vector<char> v) {
     return false;
 }
 // Method to update the duo_vector struct and return the new one.
+// We'll update the newOperations until all of its contents go correctly places in to the newPostfix.
+// This follows basically two rules:
+// 1) if char i has precedence over or equal char i+1 it is safe to say it is char i time's to get into the newPostfix
+//    (but watchout for parenthesis, as they signalizes grouped content to be investigated further)
+//    e.g. [2,4]   [*,+] --> if our vectors are like this for now, it definitely means to multiply 2 and 4.
+// 2) if found any open and closing parenthesis together, we can safely dispose them.
 duo_vector updateLists(duo_vector newLists) {
     bool lastOpChar = false;
     while(needsFix(newLists.newOperations)) {
@@ -93,6 +101,13 @@ duo_vector updateLists(duo_vector newLists) {
     return newLists;
 }
 // This method will transform the Infix notation string inputed into the Postfix format.
+// Infix notation: operators between variables. Postfix notation: variables before their operators.
+// Solving the postfix is mush simpler for algorithms. You just need to traverse the expression and apply the operator you find
+// to the previous variables found.
+// e.g. Infix notation:   a & b & c ; 4 + 5 * 7
+//      Postfix notation: a b & c & ; 4 5 7 * +
+//          It will first operate "&" with a and b and the result will "&" weith c: = (a & b) & c
+//          It will first operate "*" with 5 and 7 and the result will "+" weith 4: = (5 * 7) + 4
 vector<char> infixToPostfix(string infix) { 
     duo_vector newLists;
     vector<char> infixList(infix.begin(), infix.end());
@@ -105,6 +120,7 @@ vector<char> infixToPostfix(string infix) {
             newLists = updateLists(newLists);
         }
     }
+    // The character "E" will signalize the newOperations has ended.
     newLists.newOperations.push_back('E');
     newLists = updateLists(newLists);
     return newLists.newPostfix;
@@ -127,6 +143,7 @@ vector<char> vectorOfVariables(vector<char> v) {
     return vars;
 }
 // This method will generate all combinations of trues and falses from the number of variables.
+// e.g. for vars = {a,b} we'll get the combinationsTF = {{T,T},{F,F},{T,F},{F,T}}
 vector<vector<char>> combinations(vector<char> vars) {
     vector<vector<char>> combinationsTF;
     vector<char> tempCombination = vars;
@@ -159,6 +176,7 @@ vector<char> changeAllOccurrences(vector<char> v, char oldValue, char newValue) 
     return v;
 }
 // This method will return all possible combinations of true and false logical expressions between the variables from the original postfix.
+// e.g. postfix = {a, b, |}, all possibilities will be stored, so allLogicalExpressions = {{T, T, |},{F, F, |},{F, T, |},{T, F, |}}
 vector<vector<char>> expressionGenerator(vector<char> postfix) {
     vector<vector<char>> allLogicalExpressions;
     vector<char> variables = vectorOfVariables(postfix);
@@ -197,6 +215,9 @@ char binaryOperation(char var_1, char var_2, char op) {
     return boolToChar(a && b);
 }
 // This method will solve a logic expression and return its value.
+// Like explained in the previous section, to solve a postfix we must traverse it and keep
+// the last two variables found to apply operators when adequate.
+// Beware that there are operators that take only one variable, not two.
 char postfixSolver(vector<char> postfix) {
     char answer = 'N';
     char var_1 = 'N';
