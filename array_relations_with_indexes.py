@@ -56,4 +56,4 @@ print(time.time() - start_time)  # It took over 36 seconds
 
 start_time = time.time()
 print(better_solution(array_test))
-print(time.time() - start_time)  # It took only 0.006 seconds
+print(time.time() - start_time)  # It only took 0.006 seconds
